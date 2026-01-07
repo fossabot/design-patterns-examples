@@ -1,17 +1,19 @@
 # Design Patterns Examples
 
-A comprehensive collection of design pattern implementations in Go, React.js, PHP, and TypeScript.
+A comprehensive collection of design pattern implementations in Go, React.js, PHP, TypeScript, Java, and AngularJS.
 
 ## 📁 Repository Structure
 
-Each design pattern is organized in its own directory with implementations in four programming languages:
+Each design pattern is organized in its own directory with implementations in six programming languages:
 
 ```
 design-pattern-name/
 ├── go/
 ├── reactjs/
 ├── php/
-└── typescript/
+├── typescript/
+├── java/
+└── angularjs/
 ```
 
 ## 🎨 Design Patterns Included
@@ -63,6 +65,21 @@ tsc FactoryMethod.ts
 node FactoryMethod.js
 ```
 
+### Java
+```bash
+cd factory-method/java
+javac FactoryMethod.java
+java FactoryMethod
+```
+
+### AngularJS
+```bash
+cd factory-method/angularjs
+# Open index.html in a web browser or serve with a local server
+python -m http.server 8000
+# Navigate to http://localhost:8000
+```
+
 ## 📖 Pattern Descriptions
 
 ### Factory Method
@@ -98,6 +115,8 @@ Adds responsibilities to objects dynamically. Example: Coffee with various add-o
 - **React.js** - version 17+
 - **PHP** - version 7.4+
 - **TypeScript** - version 4.0+
+- **Java** - version 8+
+- **AngularJS** - version 1.8+
 
 ## 📝 License
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html ng-app="prototypeApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Prototype Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .document {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #fff3e0;
+        }
+        .original {
+            background-color: #e8f5e9;
+        }
+        .clone {
+            background-color: #e3f2fd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            min-height: 60px;
+        }
+    </style>
+</head>
+<body ng-controller="PrototypeController">
+    <h1>Prototype Pattern</h1>
+    <p>Creates new documents by cloning existing prototypes.</p>
+    
+    <div>
+        <h3>Create Original Document</h3>
+        <input type="text" ng-model="newDoc.title" placeholder="Document Title">
+        <textarea ng-model="newDoc.content" placeholder="Document Content"></textarea>
+        <button ng-click="createDocument()">Create Document</button>
+    </div>
+
+    <div ng-if="documents.length > 0">
+        <h3>Documents</h3>
+        <div ng-repeat="doc in documents" class="document" ng-class="doc.isClone ? 'clone' : 'original'">
+            <h4>{{doc.title}}<span ng-if="doc.isClone"> (Clone)</span></h4>
+            <p>{{doc.content}}</p>
+            <button ng-click="cloneDocument(doc)">Clone This Document</button>
+        </div>
+    </div>
+
+    <script>
+        angular.module('prototypeApp', [])
+            .controller('PrototypeController', ['$scope', 'DocumentPrototypeService', function($scope, DocumentPrototypeService) {
+                $scope.documents = [];
+                $scope.newDoc = {
+                    title: '',
+                    content: ''
+                };
+
+                $scope.createDocument = function() {
+                    if ($scope.newDoc.title && $scope.newDoc.content) {
+                        var doc = DocumentPrototypeService.createDocument($scope.newDoc.title, $scope.newDoc.content);
+                        $scope.documents.push(doc);
+                        $scope.newDoc.title = '';
+                        $scope.newDoc.content = '';
+                    }
+                };
+
+                $scope.cloneDocument = function(doc) {
+                    var clone = DocumentPrototypeService.cloneDocument(doc);
+                    $scope.documents.push(clone);
+                };
+            }])
+            .factory('DocumentPrototypeService', function() {
+                // Document Constructor
+                function Document(title, content, isClone) {
+                    this.title = title;
+                    this.content = content;
+                    this.isClone = isClone || false;
+                }
+
+                Document.prototype.clone = function() {
+                    return new Document(this.title, this.content, true);
+                };
+
+                return {
+                    createDocument: function(title, content) {
+                        return new Document(title, content, false);
+                    },
+                    cloneDocument: function(doc) {
+                        return doc.clone();
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html ng-app="singletonApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Singleton Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .query-result {
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #e8f5e9;
+        }
+        .instance-info {
+            background-color: #fff3e0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 2px solid #ff9800;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body ng-controller="SingletonController">
+    <h1>Singleton Pattern</h1>
+    <p>Ensures only one instance of the database connection exists.</p>
+    
+    <div class="instance-info">
+        <h3>Database Instance</h3>
+        <p>{{instanceInfo}}</p>
+        <p><strong>Total Instances Created:</strong> {{instanceCount}}</p>
+    </div>
+
+    <div>
+        <h3>Execute Query</h3>
+        <input type="text" ng-model="queryText" placeholder="Enter SQL query (e.g., SELECT * FROM users)">
+        <button ng-click="executeQuery()">Execute Query</button>
+    </div>
+
+    <div ng-if="queryResults.length > 0">
+        <h3>Query Results</h3>
+        <div ng-repeat="result in queryResults" class="query-result">
+            <p>{{result}}</p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('singletonApp', [])
+            .controller('SingletonController', ['$scope', 'DatabaseService', function($scope, DatabaseService) {
+                $scope.queryResults = [];
+                $scope.queryText = '';
+                $scope.instanceCount = 0;
+
+                // Get singleton instance info
+                var db = DatabaseService.getInstance();
+                $scope.instanceInfo = db.getConnection();
+                $scope.instanceCount = DatabaseService.getInstanceCount();
+
+                $scope.executeQuery = function() {
+                    if ($scope.queryText) {
+                        var result = db.query($scope.queryText);
+                        $scope.queryResults.push(result);
+                        $scope.queryText = '';
+                    }
+                };
+
+                // Demonstrate that multiple calls return the same instance
+                var db2 = DatabaseService.getInstance();
+                $scope.instanceCount = DatabaseService.getInstanceCount();
+            }])
+            .factory('DatabaseService', function() {
+                var instance = null;
+                var instanceCount = 0;
+
+                // Database Constructor
+                function Database() {
+                    if (instance) {
+                        return instance;
+                    }
+                    
+                    this.connection = 'Database connection established';
+                    instanceCount++;
+                    instance = this;
+                }
+
+                Database.prototype.getConnection = function() {
+                    return this.connection;
+                };
+
+                Database.prototype.query = function(query) {
+                    return 'Executing query: "' + query + '" on ' + this.connection;
+                };
+
+                return {
+                    getInstance: function() {
+                        if (!instance) {
+                            instance = new Database();
+                        }
+                        return instance;
+                    },
+                    getInstanceCount: function() {
+                        return instanceCount;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>
