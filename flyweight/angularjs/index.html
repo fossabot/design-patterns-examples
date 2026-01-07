@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html ng-app="flyweightApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Flyweight Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0b7dda;
+        }
+    </style>
+</head>
+<body ng-controller="FlyweightController">
+    <h1>Flyweight Pattern</h1>
+    <p>Text editor with shared character formatting to save memory.</p>
+    
+    <div>
+        <button ng-click="runExample()">Run Example</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Characters</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('flyweightApp', [])
+            .controller('FlyweightController', ['$scope', 'TextEditorService', function($scope, TextEditorService) {
+                $scope.output = [];
+
+                $scope.runExample = function() {
+                    var editor = TextEditorService.createEditor();
+                    editor.addCharacter('H', 'Arial', 12, 'Red');
+                    editor.addCharacter('e', 'Arial', 12, 'Red');
+                    editor.addCharacter('l', 'Arial', 12, 'Red');
+                    editor.addCharacter('l', 'Times', 14, 'Blue');
+                    editor.addCharacter('o', 'Times', 14, 'Blue');
+                    $scope.output = editor.display();
+                };
+            }])
+            .factory('TextEditorService', function() {
+                // Flyweight: Character formatting
+                function CharacterFormat(font, size, color) {
+                    this.font = font;
+                    this.size = size;
+                    this.color = color;
+                }
+
+                CharacterFormat.prototype.display = function(char) {
+                    return "Character '" + char + "' [Font: " + this.font + 
+                           ", Size: " + this.size + ", Color: " + this.color + "]";
+                };
+
+                // Flyweight Factory
+                function FormatFactory() {
+                    this.formats = {};
+                }
+
+                FormatFactory.prototype.getFormat = function(font, size, color) {
+                    var key = font + '-' + size + '-' + color;
+                    if (!this.formats[key]) {
+                        console.log('Created new format: ' + key);
+                        this.formats[key] = new CharacterFormat(font, size, color);
+                    }
+                    return this.formats[key];
+                };
+
+                FormatFactory.prototype.getTotalFormats = function() {
+                    return Object.keys(this.formats).length;
+                };
+
+                // Character with extrinsic state
+                function Character(char, format) {
+                    this.char = char;
+                    this.format = format;
+                }
+
+                Character.prototype.display = function() {
+                    return this.format.display(this.char);
+                };
+
+                // Text Editor
+                function TextEditor() {
+                    this.characters = [];
+                    this.factory = new FormatFactory();
+                }
+
+                TextEditor.prototype.addCharacter = function(char, font, size, color) {
+                    var format = this.factory.getFormat(font, size, color);
+                    this.characters.push(new Character(char, format));
+                };
+
+                TextEditor.prototype.display = function() {
+                    var results = [];
+                    for (var i = 0; i < this.characters.length; i++) {
+                        results.push(this.characters[i].display());
+                    }
+                    results.push('Total unique formats: ' + this.factory.getTotalFormats());
+                    return results;
+                };
+
+                return {
+                    createEditor: function() {
+                        return new TextEditor();
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

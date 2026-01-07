@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app="proxyApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Proxy Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #FF9800;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body ng-controller="ProxyController">
+    <h1>Proxy Pattern</h1>
+    <p>Image proxy that lazy-loads images only when needed.</p>
+    
+    <div>
+        <button ng-click="runExample()">Run Example</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Output</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('proxyApp', [])
+            .controller('ProxyController', ['$scope', 'ImageService', function($scope, ImageService) {
+                $scope.output = [];
+
+                $scope.runExample = function() {
+                    var results = [];
+                    var image1 = ImageService.createProxyImage('photo1.jpg');
+                    var image2 = ImageService.createProxyImage('photo2.jpg');
+
+                    results.push('First display call:');
+                    results.push(image1.display());
+                    
+                    results.push('');
+                    results.push('Second display call (cached):');
+                    results.push(image1.display());
+                    
+                    results.push('');
+                    results.push('Display another image:');
+                    results.push(image2.display());
+
+                    $scope.output = results;
+                };
+            }])
+            .factory('ImageService', function() {
+                // Real Subject
+                function RealImage(filename) {
+                    this.filename = filename;
+                    this.loadFromDisk();
+                }
+
+                RealImage.prototype.loadFromDisk = function() {
+                    console.log('Loading image from disk: ' + this.filename);
+                };
+
+                RealImage.prototype.display = function() {
+                    return 'Displaying image: ' + this.filename;
+                };
+
+                // Proxy
+                function ProxyImage(filename) {
+                    this.filename = filename;
+                    this.realImage = null;
+                    this.loadMessages = [];
+                }
+
+                ProxyImage.prototype.display = function() {
+                    if (this.realImage === null) {
+                        this.loadMessages.push('Loading image from disk: ' + this.filename);
+                        this.realImage = new RealImage(this.filename);
+                    }
+                    var messages = this.loadMessages.slice();
+                    this.loadMessages = [];
+                    messages.push(this.realImage.display());
+                    return messages.join('\n');
+                };
+
+                return {
+                    createProxyImage: function(filename) {
+                        return new ProxyImage(filename);
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

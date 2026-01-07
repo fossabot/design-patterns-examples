@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html ng-app="iteratorApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Iterator Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #e1f5fe;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #00BCD4;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0097A7;
+        }
+    </style>
+</head>
+<body ng-controller="IteratorController">
+    <h1>Iterator Pattern</h1>
+    <p>Collection iterator for different data structures.</p>
+    
+    <div>
+        <button ng-click="showBooks()">Show Books</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Books</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('iteratorApp', [])
+            .controller('IteratorController', ['$scope', 'BookService', function($scope, BookService) {
+                $scope.output = [];
+
+                $scope.showBooks = function() {
+                    $scope.output = BookService.iterateBooks();
+                };
+            }])
+            .factory('BookService', function() {
+                // Book
+                function Book(title, author) {
+                    this.title = title;
+                    this.author = author;
+                }
+
+                // Iterator
+                function BookIterator(books) {
+                    this.books = books;
+                    this.index = 0;
+                }
+
+                BookIterator.prototype.hasNext = function() {
+                    return this.index < this.books.length;
+                };
+
+                BookIterator.prototype.next = function() {
+                    if (this.hasNext()) {
+                        return this.books[this.index++];
+                    }
+                    return null;
+                };
+
+                // Collection
+                function BookCollection() {
+                    this.books = [];
+                }
+
+                BookCollection.prototype.addBook = function(book) {
+                    this.books.push(book);
+                };
+
+                BookCollection.prototype.createIterator = function() {
+                    return new BookIterator(this.books);
+                };
+
+                return {
+                    iterateBooks: function() {
+                        var collection = new BookCollection();
+                        collection.addBook(new Book('Design Patterns', 'Gang of Four'));
+                        collection.addBook(new Book('Clean Code', 'Robert Martin'));
+                        collection.addBook(new Book('The Pragmatic Programmer', 'Hunt & Thomas'));
+
+                        var iterator = collection.createIterator();
+                        var results = ['Books in collection:'];
+                        
+                        while (iterator.hasNext()) {
+                            var book = iterator.next();
+                            results.push('- ' + book.title + ' by ' + book.author);
+                        }
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

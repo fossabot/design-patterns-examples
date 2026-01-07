@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html ng-app="facadeApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Facade Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body ng-controller="FacadeController">
+    <h1>Facade Pattern</h1>
+    <p>Simplified interface to start a computer system with CPU, Memory, and HardDrive subsystems.</p>
+    
+    <div>
+        <button ng-click="startComputer()">Start Computer</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Boot Sequence</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('facadeApp', [])
+            .controller('FacadeController', ['$scope', 'ComputerFacadeService', function($scope, ComputerFacadeService) {
+                $scope.output = [];
+
+                $scope.startComputer = function() {
+                    $scope.output = ComputerFacadeService.start();
+                };
+            }])
+            .factory('ComputerFacadeService', function() {
+                // Subsystem: CPU
+                function CPU() {}
+                CPU.prototype.freeze = function() {
+                    return 'CPU: Freezing processor';
+                };
+                CPU.prototype.jump = function(position) {
+                    return 'CPU: Jumping to position ' + position;
+                };
+                CPU.prototype.execute = function() {
+                    return 'CPU: Executing instructions';
+                };
+
+                // Subsystem: Memory
+                function Memory() {}
+                Memory.prototype.load = function(position, data) {
+                    return "Memory: Loading '" + data + "' at position " + position;
+                };
+
+                // Subsystem: HardDrive
+                function HardDrive() {}
+                HardDrive.prototype.read = function(sector, size) {
+                    return 'HardDrive: Reading ' + size + ' bytes from sector ' + sector;
+                };
+
+                // Facade
+                function ComputerFacade() {
+                    this.cpu = new CPU();
+                    this.memory = new Memory();
+                    this.hardDrive = new HardDrive();
+                }
+
+                ComputerFacade.prototype.start = function() {
+                    var results = [];
+                    results.push('Starting Computer...');
+                    results.push(this.cpu.freeze());
+                    results.push(this.memory.load('0x00', 'BOOT_ADDRESS'));
+                    results.push(this.hardDrive.read('0', '1024'));
+                    results.push(this.cpu.jump('0x00'));
+                    results.push(this.cpu.execute());
+                    results.push('Computer started successfully!');
+                    return results;
+                };
+
+                var computer = new ComputerFacade();
+
+                return {
+                    start: function() {
+                        return computer.start();
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

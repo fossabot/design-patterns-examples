@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app="mediatorApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Mediator Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f3e5f5;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #673AB7;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #512DA8;
+        }
+    </style>
+</head>
+<body ng-controller="MediatorController">
+    <h1>Mediator Pattern</h1>
+    <p>Chat room where users communicate through a mediator.</p>
+    
+    <div>
+        <button ng-click="startChat()">Start Chat</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Chat Messages</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('mediatorApp', [])
+            .controller('MediatorController', ['$scope', 'ChatService', function($scope, ChatService) {
+                $scope.output = [];
+
+                $scope.startChat = function() {
+                    $scope.output = ChatService.simulateChat();
+                };
+            }])
+            .factory('ChatService', function() {
+                // Mediator
+                function ChatRoom() {
+                    this.users = [];
+                }
+
+                ChatRoom.prototype.addUser = function(user) {
+                    this.users.push(user);
+                };
+
+                ChatRoom.prototype.sendMessage = function(message, sender) {
+                    for (var i = 0; i < this.users.length; i++) {
+                        if (this.users[i] !== sender) {
+                            this.users[i].receive(message, sender.name);
+                        }
+                    }
+                };
+
+                // User
+                function User(name, mediator) {
+                    this.name = name;
+                    this.mediator = mediator;
+                    this.messages = [];
+                    mediator.addUser(this);
+                }
+
+                User.prototype.send = function(message) {
+                    this.messages.push(this.name + ' sends: ' + message);
+                    this.mediator.sendMessage(message, this);
+                };
+
+                User.prototype.receive = function(message, from) {
+                    this.messages.push(this.name + ' receives from ' + from + ': ' + message);
+                };
+
+                return {
+                    simulateChat: function() {
+                        var chatRoom = new ChatRoom();
+                        var alice = new User('Alice', chatRoom);
+                        var bob = new User('Bob', chatRoom);
+                        var charlie = new User('Charlie', chatRoom);
+
+                        alice.send('Hello everyone!');
+                        bob.send('Hi Alice!');
+
+                        var results = [];
+                        results = results.concat(alice.messages);
+                        results = results.concat(bob.messages);
+                        results = results.concat(charlie.messages);
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

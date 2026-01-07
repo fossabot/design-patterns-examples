@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app="mementoApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Memento Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #fce4ec;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #E91E63;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #C2185B;
+        }
+    </style>
+</head>
+<body ng-controller="MementoController">
+    <h1>Memento Pattern</h1>
+    <p>Text editor with undo/redo functionality.</p>
+    
+    <div>
+        <button ng-click="testUndo()">Test Undo</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Editor States</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('mementoApp', [])
+            .controller('MementoController', ['$scope', 'EditorService', function($scope, EditorService) {
+                $scope.output = [];
+
+                $scope.testUndo = function() {
+                    $scope.output = EditorService.demonstrateUndo();
+                };
+            }])
+            .factory('EditorService', function() {
+                // Memento
+                function Memento(content) {
+                    this.content = content;
+                }
+
+                Memento.prototype.getContent = function() {
+                    return this.content;
+                };
+
+                // Originator
+                function TextEditor() {
+                    this.content = '';
+                }
+
+                TextEditor.prototype.setContent = function(content) {
+                    this.content = content;
+                };
+
+                TextEditor.prototype.getContent = function() {
+                    return this.content;
+                };
+
+                TextEditor.prototype.save = function() {
+                    return new Memento(this.content);
+                };
+
+                TextEditor.prototype.restore = function(memento) {
+                    this.content = memento.getContent();
+                };
+
+                // Caretaker
+                function History() {
+                    this.mementos = [];
+                }
+
+                History.prototype.push = function(memento) {
+                    this.mementos.push(memento);
+                };
+
+                History.prototype.pop = function() {
+                    return this.mementos.pop();
+                };
+
+                return {
+                    demonstrateUndo: function() {
+                        var editor = new TextEditor();
+                        var history = new History();
+                        var results = [];
+
+                        editor.setContent('Version 1');
+                        history.push(editor.save());
+                        results.push('Current: ' + editor.getContent());
+
+                        editor.setContent('Version 2');
+                        history.push(editor.save());
+                        results.push('Current: ' + editor.getContent());
+
+                        editor.setContent('Version 3');
+                        results.push('Current: ' + editor.getContent());
+
+                        editor.restore(history.pop());
+                        results.push('After undo: ' + editor.getContent());
+
+                        editor.restore(history.pop());
+                        results.push('After undo: ' + editor.getContent());
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

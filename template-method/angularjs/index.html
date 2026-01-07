@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="templateMethodApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Template Method Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f1f8e9;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #8BC34A;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #689F38;
+        }
+    </style>
+</head>
+<body ng-controller="TemplateMethodController">
+    <h1>Template Method Pattern</h1>
+    <p>Beverage preparation (Tea, Coffee) with common steps.</p>
+    
+    <div>
+        <button ng-click="prepareBeverages()">Prepare Beverages</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Preparation Steps</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('templateMethodApp', [])
+            .controller('TemplateMethodController', ['$scope', 'BeverageService', function($scope, BeverageService) {
+                $scope.output = [];
+
+                $scope.prepareBeverages = function() {
+                    $scope.output = BeverageService.prepare();
+                };
+            }])
+            .factory('BeverageService', function() {
+                // Abstract class (template)
+                function Beverage() {}
+                
+                Beverage.prototype.prepareRecipe = function() {
+                    var results = [];
+                    results.push('Boiling water');
+                    results.push(this.brew());
+                    results.push('Pouring into cup');
+                    results.push(this.addCondiments());
+                    return results;
+                };
+
+                // Concrete implementations
+                function Tea() {}
+                Tea.prototype = Object.create(Beverage.prototype);
+                
+                Tea.prototype.brew = function() {
+                    return 'Steeping the tea';
+                };
+                
+                Tea.prototype.addCondiments = function() {
+                    return 'Adding lemon';
+                };
+
+                function Coffee() {}
+                Coffee.prototype = Object.create(Beverage.prototype);
+                
+                Coffee.prototype.brew = function() {
+                    return 'Dripping coffee through filter';
+                };
+                
+                Coffee.prototype.addCondiments = function() {
+                    return 'Adding sugar and milk';
+                };
+
+                return {
+                    prepare: function() {
+                        var results = [];
+                        
+                        results.push('Making tea:');
+                        var tea = new Tea();
+                        var teaSteps = tea.prepareRecipe();
+                        for (var i = 0; i < teaSteps.length; i++) {
+                            results.push('- ' + teaSteps[i]);
+                        }
+                        
+                        results.push('');
+                        results.push('Making coffee:');
+                        var coffee = new Coffee();
+                        var coffeeSteps = coffee.prepareRecipe();
+                        for (var j = 0; j < coffeeSteps.length; j++) {
+                            results.push('- ' + coffeeSteps[j]);
+                        }
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

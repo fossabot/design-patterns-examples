@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html ng-app="visitorApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Visitor Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #fce4ec;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #E91E63;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #C2185B;
+        }
+    </style>
+</head>
+<body ng-controller="VisitorController">
+    <h1>Visitor Pattern</h1>
+    <p>Shape visitor that calculates area or draws shapes.</p>
+    
+    <div>
+        <button ng-click="processShapes()">Process Shapes</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Shape Processing</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('visitorApp', [])
+            .controller('VisitorController', ['$scope', 'ShapeService', function($scope, ShapeService) {
+                $scope.output = [];
+
+                $scope.processShapes = function() {
+                    $scope.output = ShapeService.processShapes();
+                };
+            }])
+            .factory('ShapeService', function() {
+                // Concrete Elements
+                function Circle(radius) {
+                    this.radius = radius;
+                }
+                Circle.prototype.accept = function(visitor) {
+                    return visitor.visitCircle(this);
+                };
+
+                function Rectangle(width, height) {
+                    this.width = width;
+                    this.height = height;
+                }
+                Rectangle.prototype.accept = function(visitor) {
+                    return visitor.visitRectangle(this);
+                };
+
+                function Triangle(base, height) {
+                    this.base = base;
+                    this.height = height;
+                }
+                Triangle.prototype.accept = function(visitor) {
+                    return visitor.visitTriangle(this);
+                };
+
+                // Concrete Visitors
+                function AreaCalculator() {}
+                AreaCalculator.prototype.visitCircle = function(circle) {
+                    var area = Math.PI * circle.radius * circle.radius;
+                    return 'Circle area: ' + area.toFixed(2);
+                };
+                AreaCalculator.prototype.visitRectangle = function(rectangle) {
+                    var area = rectangle.width * rectangle.height;
+                    return 'Rectangle area: ' + area.toFixed(2);
+                };
+                AreaCalculator.prototype.visitTriangle = function(triangle) {
+                    var area = 0.5 * triangle.base * triangle.height;
+                    return 'Triangle area: ' + area.toFixed(2);
+                };
+
+                function DrawVisitor() {}
+                DrawVisitor.prototype.visitCircle = function(circle) {
+                    return 'Drawing Circle with radius ' + circle.radius.toFixed(2);
+                };
+                DrawVisitor.prototype.visitRectangle = function(rectangle) {
+                    return 'Drawing Rectangle ' + rectangle.width.toFixed(2) + ' x ' + rectangle.height.toFixed(2);
+                };
+                DrawVisitor.prototype.visitTriangle = function(triangle) {
+                    return 'Drawing Triangle base ' + triangle.base.toFixed(2) + ', height ' + triangle.height.toFixed(2);
+                };
+
+                return {
+                    processShapes: function() {
+                        var shapes = [
+                            new Circle(5),
+                            new Rectangle(4, 6),
+                            new Triangle(3, 4)
+                        ];
+
+                        var areaCalc = new AreaCalculator();
+                        var drawer = new DrawVisitor();
+
+                        var results = [];
+                        results.push('Calculating areas:');
+                        for (var i = 0; i < shapes.length; i++) {
+                            results.push(shapes[i].accept(areaCalc));
+                        }
+
+                        results.push('');
+                        results.push('Drawing shapes:');
+                        for (var j = 0; j < shapes.length; j++) {
+                            results.push(shapes[j].accept(drawer));
+                        }
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

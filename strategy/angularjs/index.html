@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="strategyApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Strategy Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #ffe0b2;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #FF9800;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #F57C00;
+        }
+    </style>
+</head>
+<body ng-controller="StrategyController">
+    <h1>Strategy Pattern</h1>
+    <p>Payment system with different payment strategies (Credit Card, PayPal, Bitcoin).</p>
+    
+    <div>
+        <button ng-click="testPayments()">Test Payments</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Payment Results</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('strategyApp', [])
+            .controller('StrategyController', ['$scope', 'PaymentService', function($scope, PaymentService) {
+                $scope.output = [];
+
+                $scope.testPayments = function() {
+                    $scope.output = PaymentService.testStrategies();
+                };
+            }])
+            .factory('PaymentService', function() {
+                // Concrete Strategies
+                function CreditCardPayment(cardNumber) {
+                    this.cardNumber = cardNumber;
+                }
+                CreditCardPayment.prototype.pay = function(amount) {
+                    var lastFour = this.cardNumber.slice(-4);
+                    return 'Paid $' + amount.toFixed(2) + ' using Credit Card ending in ' + lastFour;
+                };
+
+                function PayPalPayment(email) {
+                    this.email = email;
+                }
+                PayPalPayment.prototype.pay = function(amount) {
+                    return 'Paid $' + amount.toFixed(2) + ' using PayPal account ' + this.email;
+                };
+
+                function BitcoinPayment(walletAddress) {
+                    this.walletAddress = walletAddress;
+                }
+                BitcoinPayment.prototype.pay = function(amount) {
+                    var shortAddress = this.walletAddress.substring(0, 8) + '...';
+                    return 'Paid $' + amount.toFixed(2) + ' using Bitcoin wallet ' + shortAddress;
+                };
+
+                // Context
+                function ShoppingCart(amount) {
+                    this.amount = amount;
+                    this.paymentStrategy = null;
+                }
+
+                ShoppingCart.prototype.setPaymentStrategy = function(strategy) {
+                    this.paymentStrategy = strategy;
+                };
+
+                ShoppingCart.prototype.checkout = function() {
+                    return this.paymentStrategy.pay(this.amount);
+                };
+
+                return {
+                    testStrategies: function() {
+                        var cart = new ShoppingCart(100.0);
+                        var results = [];
+
+                        cart.setPaymentStrategy(new CreditCardPayment('1234567890123456'));
+                        results.push(cart.checkout());
+
+                        cart.setPaymentStrategy(new PayPalPayment('user@example.com'));
+                        results.push(cart.checkout());
+
+                        cart.setPaymentStrategy(new BitcoinPayment('1A2B3C4D5E6F7G8H'));
+                        results.push(cart.checkout());
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

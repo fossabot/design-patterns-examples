@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html ng-app="commandApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Command Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #fff3e0;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #FF5722;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #E64A19;
+        }
+    </style>
+</head>
+<body ng-controller="CommandController">
+    <h1>Command Pattern</h1>
+    <p>Remote control with on/off commands for devices.</p>
+    
+    <div>
+        <button ng-click="testRemote()">Test Remote</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Remote Control Actions</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('commandApp', [])
+            .controller('CommandController', ['$scope', 'RemoteService', function($scope, RemoteService) {
+                $scope.output = [];
+
+                $scope.testRemote = function() {
+                    $scope.output = RemoteService.testCommands();
+                };
+            }])
+            .factory('RemoteService', function() {
+                // Receiver
+                function Light(location) {
+                    this.location = location;
+                }
+
+                Light.prototype.on = function() {
+                    return this.location + ' light is ON';
+                };
+
+                Light.prototype.off = function() {
+                    return this.location + ' light is OFF';
+                };
+
+                // Concrete Commands
+                function LightOnCommand(light) {
+                    this.light = light;
+                }
+
+                LightOnCommand.prototype.execute = function() {
+                    return this.light.on();
+                };
+
+                function LightOffCommand(light) {
+                    this.light = light;
+                }
+
+                LightOffCommand.prototype.execute = function() {
+                    return this.light.off();
+                };
+
+                // Invoker
+                function RemoteControl() {
+                    this.command = null;
+                }
+
+                RemoteControl.prototype.setCommand = function(command) {
+                    this.command = command;
+                };
+
+                RemoteControl.prototype.pressButton = function() {
+                    return this.command.execute();
+                };
+
+                return {
+                    testCommands: function() {
+                        var light = new Light('Living Room');
+                        var lightOn = new LightOnCommand(light);
+                        var lightOff = new LightOffCommand(light);
+                        var remote = new RemoteControl();
+                        var results = [];
+
+                        remote.setCommand(lightOn);
+                        results.push(remote.pressButton());
+
+                        remote.setCommand(lightOff);
+                        results.push(remote.pressButton());
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html ng-app="stateApp">
+<head>
+    <meta charset="UTF-8">
+    <title>State Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #e0f2f1;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #009688;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #00796B;
+        }
+    </style>
+</head>
+<body ng-controller="StateController">
+    <h1>State Pattern</h1>
+    <p>Document workflow with draft, review, and published states.</p>
+    
+    <div>
+        <button ng-click="testWorkflow()">Test Workflow</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Workflow States</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('stateApp', [])
+            .controller('StateController', ['$scope', 'DocumentService', function($scope, DocumentService) {
+                $scope.output = [];
+
+                $scope.testWorkflow = function() {
+                    $scope.output = DocumentService.testStates();
+                };
+            }])
+            .factory('DocumentService', function() {
+                // Concrete States
+                function DraftState() {}
+                DraftState.prototype.publish = function(doc) {
+                    return 'Cannot publish from Draft. Please review first.';
+                };
+                DraftState.prototype.review = function(doc) {
+                    doc.setState(new ReviewState());
+                    return 'Document moved to Review state';
+                };
+
+                function ReviewState() {}
+                ReviewState.prototype.publish = function(doc) {
+                    doc.setState(new PublishedState());
+                    return 'Document published successfully';
+                };
+                ReviewState.prototype.review = function(doc) {
+                    return 'Document is already in Review state';
+                };
+
+                function PublishedState() {}
+                PublishedState.prototype.publish = function(doc) {
+                    return 'Document is already published';
+                };
+                PublishedState.prototype.review = function(doc) {
+                    return 'Cannot review a published document';
+                };
+
+                // Context
+                function Document(name) {
+                    this.name = name;
+                    this.state = new DraftState();
+                }
+
+                Document.prototype.setState = function(state) {
+                    this.state = state;
+                };
+
+                Document.prototype.publish = function() {
+                    return this.state.publish(this);
+                };
+
+                Document.prototype.review = function() {
+                    return this.state.review(this);
+                };
+
+                return {
+                    testStates: function() {
+                        var doc = new Document('Design Patterns Guide');
+                        var results = [];
+
+                        results.push('Initial state: Draft');
+                        results.push(doc.publish());
+                        results.push(doc.review());
+                        results.push(doc.publish());
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

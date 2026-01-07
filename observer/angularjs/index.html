@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="observerApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Observer Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #fff9c4;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #FFEB3B;
+            color: #000;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #FDD835;
+        }
+    </style>
+</head>
+<body ng-controller="ObserverController">
+    <h1>Observer Pattern</h1>
+    <p>Weather station that notifies multiple displays.</p>
+    
+    <div>
+        <button ng-click="updateWeather()">Update Weather</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Display Updates</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('observerApp', [])
+            .controller('ObserverController', ['$scope', 'WeatherService', function($scope, WeatherService) {
+                $scope.output = [];
+
+                $scope.updateWeather = function() {
+                    $scope.output = WeatherService.demonstrateObserver();
+                };
+            }])
+            .factory('WeatherService', function() {
+                // Concrete Subject
+                function WeatherStation() {
+                    this.observers = [];
+                    this.temperature = 0;
+                }
+
+                WeatherStation.prototype.attach = function(observer) {
+                    this.observers.push(observer);
+                };
+
+                WeatherStation.prototype.detach = function(observer) {
+                    var index = this.observers.indexOf(observer);
+                    if (index > -1) {
+                        this.observers.splice(index, 1);
+                    }
+                };
+
+                WeatherStation.prototype.notify = function() {
+                    for (var i = 0; i < this.observers.length; i++) {
+                        this.observers[i].update(this.temperature);
+                    }
+                };
+
+                WeatherStation.prototype.setTemperature = function(temp) {
+                    this.temperature = temp;
+                    this.notify();
+                };
+
+                // Concrete Observer
+                function Display(name) {
+                    this.name = name;
+                    this.messages = [];
+                }
+
+                Display.prototype.update = function(temperature) {
+                    this.messages.push(this.name + ': Temperature updated to ' + temperature + '°C');
+                };
+
+                return {
+                    demonstrateObserver: function() {
+                        var station = new WeatherStation();
+                        var phone = new Display('Phone Display');
+                        var window = new Display('Window Display');
+
+                        station.attach(phone);
+                        station.attach(window);
+
+                        station.setTemperature(25.5);
+                        station.setTemperature(30.0);
+
+                        var results = [];
+                        results = results.concat(phone.messages);
+                        results = results.concat(window.messages);
+
+                        return results;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

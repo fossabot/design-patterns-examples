@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html ng-app="chainApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Chain of Responsibility Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .output {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #e8f5e9;
+        }
+        .output p {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        button {
+            background-color: #9C27B0;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #7B1FA2;
+        }
+    </style>
+</head>
+<body ng-controller="ChainController">
+    <h1>Chain of Responsibility Pattern</h1>
+    <p>Support ticket system with multiple support levels.</p>
+    
+    <div>
+        <button ng-click="processTickets()">Process Tickets</button>
+    </div>
+
+    <div ng-if="output.length > 0" class="output">
+        <h3>Ticket Processing Results</h3>
+        <p ng-repeat="message in output">{{message}}</p>
+    </div>
+
+    <script>
+        angular.module('chainApp', [])
+            .controller('ChainController', ['$scope', 'SupportService', function($scope, SupportService) {
+                $scope.output = [];
+
+                $scope.processTickets = function() {
+                    var chain = SupportService.createChain();
+                    var tickets = [
+                        { level: 1, message: 'Password reset' },
+                        { level: 2, message: 'Software installation issue' },
+                        { level: 3, message: 'Server crash investigation' }
+                    ];
+
+                    $scope.output = tickets.map(function(ticket) {
+                        return chain.handleRequest(ticket);
+                    });
+                };
+            }])
+            .factory('SupportService', function() {
+                // Base Handler
+                function BaseSupportHandler() {
+                    this.next = null;
+                }
+
+                BaseSupportHandler.prototype.setNext = function(handler) {
+                    this.next = handler;
+                };
+
+                // Level 1 Support
+                function Level1Support() {
+                    BaseSupportHandler.call(this);
+                }
+                Level1Support.prototype = Object.create(BaseSupportHandler.prototype);
+                
+                Level1Support.prototype.handleRequest = function(ticket) {
+                    if (ticket.level <= 1) {
+                        return 'Level 1 Support: Handling ticket - ' + ticket.message;
+                    }
+                    if (this.next) {
+                        return this.next.handleRequest(ticket);
+                    }
+                    return 'No handler available';
+                };
+
+                // Level 2 Support
+                function Level2Support() {
+                    BaseSupportHandler.call(this);
+                }
+                Level2Support.prototype = Object.create(BaseSupportHandler.prototype);
+                
+                Level2Support.prototype.handleRequest = function(ticket) {
+                    if (ticket.level <= 2) {
+                        return 'Level 2 Support: Handling ticket - ' + ticket.message;
+                    }
+                    if (this.next) {
+                        return this.next.handleRequest(ticket);
+                    }
+                    return 'No handler available';
+                };
+
+                // Level 3 Support
+                function Level3Support() {
+                    BaseSupportHandler.call(this);
+                }
+                Level3Support.prototype = Object.create(BaseSupportHandler.prototype);
+                
+                Level3Support.prototype.handleRequest = function(ticket) {
+                    if (ticket.level <= 3) {
+                        return 'Level 3 Support: Handling ticket - ' + ticket.message;
+                    }
+                    if (this.next) {
+                        return this.next.handleRequest(ticket);
+                    }
+                    return 'No handler available';
+                };
+
+                return {
+                    createChain: function() {
+                        var level1 = new Level1Support();
+                        var level2 = new Level2Support();
+                        var level3 = new Level3Support();
+
+                        level1.setNext(level2);
+                        level2.setNext(level3);
+
+                        return level1;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>
