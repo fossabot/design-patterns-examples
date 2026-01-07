@@ -32,6 +32,21 @@ This repository includes examples for the following design patterns:
 - **Bridge** - Separates an object's abstraction from its implementation
 - **Composite** - Composes objects into tree structures to represent part-whole hierarchies
 - **Decorator** - Adds new functionality to objects dynamically
+- **Facade** - Provides a simplified interface to a complex subsystem
+- **Flyweight** - Shares common state between multiple objects to save memory
+- **Proxy** - Provides a placeholder or surrogate for another object to control access
+
+### Behavioral Patterns
+- **Chain of Responsibility** - Passes requests along a chain of handlers
+- **Command** - Encapsulates a request as an object
+- **Iterator** - Provides a way to access elements sequentially without exposing the underlying representation
+- **Mediator** - Defines an object that encapsulates how objects interact
+- **Memento** - Captures and restores an object's internal state
+- **Observer** - Defines a one-to-many dependency between objects
+- **State** - Allows an object to alter its behavior when its internal state changes
+- **Strategy** - Defines a family of algorithms and makes them interchangeable
+- **Template Method** - Defines the skeleton of an algorithm in a base class
+- **Visitor** - Separates algorithms from the objects they operate on
 
 ## 🚀 Usage
 
@@ -108,6 +123,45 @@ Treats individual objects and compositions uniformly. Example: Organization hier
 
 ### Decorator
 Adds responsibilities to objects dynamically. Example: Coffee with various add-ons (Milk, Sugar).
+
+### Facade
+Provides a simplified interface to a complex subsystem. Example: Computer system with CPU, Memory, and HardDrive subsystems.
+
+### Flyweight
+Shares common state between multiple objects to save memory. Example: Text editor with character formatting (shared font, size, color data).
+
+### Proxy
+Provides a placeholder or surrogate for another object to control access. Example: Image proxy that lazy-loads images.
+
+### Chain of Responsibility
+Passes requests along a chain of handlers. Example: Support ticket system with multiple support levels.
+
+### Command
+Encapsulates a request as an object. Example: Remote control with on/off commands for devices.
+
+### Iterator
+Provides a way to access elements sequentially without exposing the underlying representation. Example: Collection iterator for different data structures.
+
+### Mediator
+Defines an object that encapsulates how objects interact. Example: Chat room where users communicate through a mediator.
+
+### Memento
+Captures and restores an object's internal state. Example: Text editor with undo/redo functionality.
+
+### Observer
+Defines a one-to-many dependency between objects. Example: Weather station that notifies multiple displays.
+
+### State
+Allows an object to alter its behavior when its internal state changes. Example: Document workflow with draft, review, and published states.
+
+### Strategy
+Defines a family of algorithms and makes them interchangeable. Example: Payment system with different payment strategies (Credit Card, PayPal, Bitcoin).
+
+### Template Method
+Defines the skeleton of an algorithm in a base class. Example: Beverage preparation (Tea, Coffee) with common steps.
+
+### Visitor
+Separates algorithms from the objects they operate on. Example: Shape visitor that calculates area or draws shapes.
 
 ## 🛠️ Technologies
 
