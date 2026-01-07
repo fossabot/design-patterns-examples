@@ -10,6 +10,9 @@ node_modules/
 dist/
 build/
 
+# Java compiled classes
+*.class
+
 # IDE files
 .vscode/
 .idea/

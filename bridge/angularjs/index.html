@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app="bridgeApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Bridge Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .shape {
+            border: 3px solid;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .red {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+        .blue {
+            border-color: #2196F3;
+            background-color: #e3f2fd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body ng-controller="BridgeController">
+    <h1>Bridge Pattern</h1>
+    <p>Separates shape abstraction from color implementation.</p>
+    
+    <div class="controls">
+        <button ng-click="drawShape('circle', 'red')">Red Circle</button>
+        <button ng-click="drawShape('circle', 'blue')">Blue Circle</button>
+        <button ng-click="drawShape('square', 'red')">Red Square</button>
+        <button ng-click="drawShape('square', 'blue')">Blue Square</button>
+    </div>
+
+    <div ng-if="shapes.length > 0">
+        <h3>Drawn Shapes</h3>
+        <div ng-repeat="shape in shapes" class="shape" ng-class="shape.colorClass">
+            <h3>{{shape.name}}</h3>
+            <p>{{shape.description}}</p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('bridgeApp', [])
+            .controller('BridgeController', ['$scope', 'ShapeService', function($scope, ShapeService) {
+                $scope.shapes = [];
+
+                $scope.drawShape = function(shapeType, colorType) {
+                    var shape = ShapeService.createShape(shapeType, colorType);
+                    $scope.shapes.push(shape);
+                };
+            }])
+            .factory('ShapeService', function() {
+                // Color Implementations
+                function RedColor() {}
+                RedColor.prototype.fill = function() {
+                    return 'Red';
+                };
+
+                function BlueColor() {}
+                BlueColor.prototype.fill = function() {
+                    return 'Blue';
+                };
+
+                // Shape Abstractions
+                function Circle(color) {
+                    this.color = color;
+                }
+                Circle.prototype.draw = function() {
+                    return {
+                        name: 'Circle',
+                        description: 'Drawing Circle with color: ' + this.color.fill(),
+                        colorClass: this.color.fill().toLowerCase()
+                    };
+                };
+
+                function Square(color) {
+                    this.color = color;
+                }
+                Square.prototype.draw = function() {
+                    return {
+                        name: 'Square',
+                        description: 'Drawing Square with color: ' + this.color.fill(),
+                        colorClass: this.color.fill().toLowerCase()
+                    };
+                };
+
+                return {
+                    createShape: function(shapeType, colorType) {
+                        var color;
+                        if (colorType === 'red') {
+                            color = new RedColor();
+                        } else if (colorType === 'blue') {
+                            color = new BlueColor();
+                        }
+
+                        var shape;
+                        if (shapeType === 'circle') {
+                            shape = new Circle(color);
+                        } else if (shapeType === 'square') {
+                            shape = new Square(color);
+                        }
+
+                        return shape.draw();
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

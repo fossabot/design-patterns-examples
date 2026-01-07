@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html ng-app="builderApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Builder Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .house {
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .concrete {
+            background-color: #cfd8dc;
+        }
+        .wooden {
+            background-color: #d7ccc8;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .house-details {
+            margin-top: 10px;
+        }
+        .house-details p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body ng-controller="BuilderController">
+    <h1>Builder Pattern</h1>
+    <p>Constructs complex houses step by step.</p>
+    
+    <div>
+        <button ng-click="buildConcreteHouse()">Build Concrete House</button>
+        <button ng-click="buildWoodenHouse()">Build Wooden House</button>
+    </div>
+
+    <div ng-repeat="house in houses" class="house" ng-class="house.type">
+        <h3>{{house.type | uppercase}} House</h3>
+        <div class="house-details">
+            <p><strong>Foundation:</strong> {{house.foundation}}</p>
+            <p><strong>Structure:</strong> {{house.structure}}</p>
+            <p><strong>Roof:</strong> {{house.roof}}</p>
+            <p><strong>Interior:</strong> {{house.interior}}</p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('builderApp', [])
+            .controller('BuilderController', ['$scope', 'HouseBuilderService', function($scope, HouseBuilderService) {
+                $scope.houses = [];
+
+                $scope.buildConcreteHouse = function() {
+                    var house = HouseBuilderService.buildHouse('concrete');
+                    $scope.houses.push(house);
+                };
+
+                $scope.buildWoodenHouse = function() {
+                    var house = HouseBuilderService.buildHouse('wooden');
+                    $scope.houses.push(house);
+                };
+            }])
+            .factory('HouseBuilderService', function() {
+                // House Object
+                function House() {
+                    this.foundation = '';
+                    this.structure = '';
+                    this.roof = '';
+                    this.interior = '';
+                    this.type = '';
+                }
+
+                // Concrete House Builder
+                function ConcreteHouseBuilder() {
+                    this.house = new House();
+                    this.house.type = 'concrete';
+                }
+                ConcreteHouseBuilder.prototype.buildFoundation = function() {
+                    this.house.foundation = 'Concrete foundation';
+                };
+                ConcreteHouseBuilder.prototype.buildStructure = function() {
+                    this.house.structure = 'Concrete structure';
+                };
+                ConcreteHouseBuilder.prototype.buildRoof = function() {
+                    this.house.roof = 'Concrete roof';
+                };
+                ConcreteHouseBuilder.prototype.buildInterior = function() {
+                    this.house.interior = 'Concrete interior';
+                };
+                ConcreteHouseBuilder.prototype.getHouse = function() {
+                    return this.house;
+                };
+
+                // Wooden House Builder
+                function WoodenHouseBuilder() {
+                    this.house = new House();
+                    this.house.type = 'wooden';
+                }
+                WoodenHouseBuilder.prototype.buildFoundation = function() {
+                    this.house.foundation = 'Wooden foundation';
+                };
+                WoodenHouseBuilder.prototype.buildStructure = function() {
+                    this.house.structure = 'Wooden structure';
+                };
+                WoodenHouseBuilder.prototype.buildRoof = function() {
+                    this.house.roof = 'Wooden roof';
+                };
+                WoodenHouseBuilder.prototype.buildInterior = function() {
+                    this.house.interior = 'Wooden interior';
+                };
+                WoodenHouseBuilder.prototype.getHouse = function() {
+                    return this.house;
+                };
+
+                // Director
+                function Director(builder) {
+                    this.builder = builder;
+                }
+                Director.prototype.construct = function() {
+                    this.builder.buildFoundation();
+                    this.builder.buildStructure();
+                    this.builder.buildRoof();
+                    this.builder.buildInterior();
+                    return this.builder.getHouse();
+                };
+
+                return {
+                    buildHouse: function(type) {
+                        var builder;
+                        if (type === 'concrete') {
+                            builder = new ConcreteHouseBuilder();
+                        } else if (type === 'wooden') {
+                            builder = new WoodenHouseBuilder();
+                        } else {
+                            throw new Error('Unknown house type');
+                        }
+                        var director = new Director(builder);
+                        return director.construct();
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="decoratorApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Decorator Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .coffee {
+            border: 2px solid #6d4c41;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #efebe9;
+        }
+        .addons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .addon-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .price {
+            font-size: 1.5em;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body ng-controller="DecoratorController">
+    <h1>Decorator Pattern</h1>
+    <p>Coffee with various add-ons (decorators).</p>
+    
+    <div>
+        <h3>Customize Your Coffee</h3>
+        <div class="addons">
+            <div class="addon-checkbox">
+                <input type="checkbox" id="milk" ng-model="addons.milk">
+                <label for="milk">Add Milk (+$0.50)</label>
+            </div>
+            <div class="addon-checkbox">
+                <input type="checkbox" id="sugar" ng-model="addons.sugar">
+                <label for="sugar">Add Sugar (+$0.20)</label>
+            </div>
+        </div>
+        <button ng-click="orderCoffee()">Order Coffee</button>
+    </div>
+
+    <div ng-if="orders.length > 0">
+        <h3>Your Orders</h3>
+        <div ng-repeat="order in orders" class="coffee">
+            <h4>Order #{{$index + 1}}</h4>
+            <p><strong>Description:</strong> {{order.description}}</p>
+            <p class="price">Price: ${{order.cost.toFixed(2)}}</p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('decoratorApp', [])
+            .controller('DecoratorController', ['$scope', 'CoffeeService', function($scope, CoffeeService) {
+                $scope.orders = [];
+                $scope.addons = {
+                    milk: false,
+                    sugar: false
+                };
+
+                $scope.orderCoffee = function() {
+                    var coffee = CoffeeService.createCoffee($scope.addons);
+                    $scope.orders.push(coffee);
+                };
+            }])
+            .factory('CoffeeService', function() {
+                // Base Coffee
+                function SimpleCoffee() {
+                    this.description = 'Simple Coffee';
+                    this.cost = 2.0;
+                }
+
+                SimpleCoffee.prototype.getDescription = function() {
+                    return this.description;
+                };
+
+                SimpleCoffee.prototype.getCost = function() {
+                    return this.cost;
+                };
+
+                // Milk Decorator
+                function MilkDecorator(coffee) {
+                    this.coffee = coffee;
+                }
+
+                MilkDecorator.prototype.getDescription = function() {
+                    return this.coffee.getDescription() + ', Milk';
+                };
+
+                MilkDecorator.prototype.getCost = function() {
+                    return this.coffee.getCost() + 0.5;
+                };
+
+                // Sugar Decorator
+                function SugarDecorator(coffee) {
+                    this.coffee = coffee;
+                }
+
+                SugarDecorator.prototype.getDescription = function() {
+                    return this.coffee.getDescription() + ', Sugar';
+                };
+
+                SugarDecorator.prototype.getCost = function() {
+                    return this.coffee.getCost() + 0.2;
+                };
+
+                return {
+                    createCoffee: function(addons) {
+                        var coffee = new SimpleCoffee();
+
+                        if (addons.milk) {
+                            coffee = new MilkDecorator(coffee);
+                        }
+
+                        if (addons.sugar) {
+                            coffee = new SugarDecorator(coffee);
+                        }
+
+                        return {
+                            description: coffee.getDescription(),
+                            cost: coffee.getCost()
+                        };
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

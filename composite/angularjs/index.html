@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app="compositeApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Composite Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .organization {
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+        .employee {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+        }
+        .manager {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+        .subordinates {
+            margin-left: 20px;
+            border-left: 2px dashed #ccc;
+            padding-left: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body ng-controller="CompositeController">
+    <h1>Composite Pattern</h1>
+    <p>Organization hierarchy with employees and managers.</p>
+    
+    <div>
+        <button ng-click="buildOrganization()">Build Organization</button>
+        <button ng-click="clearOrganization()">Clear</button>
+    </div>
+
+    <div ng-if="organization" class="organization">
+        <h3>Organization Structure</h3>
+        <div ng-include="'employee-template.html'"></div>
+    </div>
+
+    <!-- Template for displaying employees recursively -->
+    <script type="text/ng-template" id="employee-template.html">
+        <div ng-class="organization.isManager ? 'manager' : 'employee'">
+            <strong>{{organization.name}}</strong> - {{organization.position}}
+            <div ng-if="organization.subordinates && organization.subordinates.length > 0" class="subordinates">
+                <div ng-repeat="emp in organization.subordinates">
+                    <div ng-init="organization = emp" ng-include="'employee-template.html'"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        angular.module('compositeApp', [])
+            .controller('CompositeController', ['$scope', 'OrganizationService', function($scope, OrganizationService) {
+                $scope.organization = null;
+
+                $scope.buildOrganization = function() {
+                    $scope.organization = OrganizationService.buildOrganization();
+                };
+
+                $scope.clearOrganization = function() {
+                    $scope.organization = null;
+                };
+            }])
+            .factory('OrganizationService', function() {
+                // Employee (Leaf)
+                function Employee(name, position) {
+                    this.name = name;
+                    this.position = position;
+                    this.isManager = false;
+                }
+
+                // Manager (Composite)
+                function Manager(name, position) {
+                    this.name = name;
+                    this.position = position;
+                    this.subordinates = [];
+                    this.isManager = true;
+                }
+
+                Manager.prototype.add = function(employee) {
+                    this.subordinates.push(employee);
+                };
+
+                return {
+                    buildOrganization: function() {
+                        // Create employees
+                        var dev1 = new Employee('John', 'Developer');
+                        var dev2 = new Employee('Jane', 'Developer');
+                        var designer = new Employee('Bob', 'Designer');
+
+                        // Create managers
+                        var devManager = new Manager('Alice', 'Development Manager');
+                        devManager.add(dev1);
+                        devManager.add(dev2);
+
+                        var generalManager = new Manager('Charlie', 'General Manager');
+                        generalManager.add(devManager);
+                        generalManager.add(designer);
+
+                        return generalManager;
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

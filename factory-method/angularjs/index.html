@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app="factoryMethodApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Factory Method Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .vehicle {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .car {
+            background-color: #e3f2fd;
+        }
+        .bike {
+            background-color: #f3e5f5;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body ng-controller="FactoryMethodController">
+    <h1>Factory Method Pattern</h1>
+    <p>Demonstrates creating different types of vehicles using factory method pattern.</p>
+    
+    <div>
+        <button ng-click="createCar()">Create Car</button>
+        <button ng-click="createBike()">Create Bike</button>
+    </div>
+
+    <div ng-repeat="vehicle in vehicles" class="vehicle" ng-class="vehicle.type">
+        <h3>{{vehicle.name}}</h3>
+        <p>{{vehicle.description}}</p>
+    </div>
+
+    <script>
+        // Factory Method Pattern Implementation
+        angular.module('factoryMethodApp', [])
+            .controller('FactoryMethodController', ['$scope', 'VehicleFactoryService', function($scope, VehicleFactoryService) {
+                $scope.vehicles = [];
+
+                $scope.createCar = function() {
+                    var car = VehicleFactoryService.createVehicle('car');
+                    $scope.vehicles.push(car);
+                };
+
+                $scope.createBike = function() {
+                    var bike = VehicleFactoryService.createVehicle('bike');
+                    $scope.vehicles.push(bike);
+                };
+            }])
+            .factory('VehicleFactoryService', function() {
+                // Vehicle Constructor
+                function Vehicle(name, description, type) {
+                    this.name = name;
+                    this.description = description;
+                    this.type = type;
+                }
+
+                Vehicle.prototype.drive = function() {
+                    return this.description;
+                };
+
+                // Car Factory
+                function CarFactory() {}
+                CarFactory.prototype.createVehicle = function() {
+                    return new Vehicle('Car', 'Driving a car on the road', 'car');
+                };
+
+                // Bike Factory
+                function BikeFactory() {}
+                BikeFactory.prototype.createVehicle = function() {
+                    return new Vehicle('Bike', 'Riding a bike on the path', 'bike');
+                };
+
+                // Factory Service
+                return {
+                    createVehicle: function(type) {
+                        if (type === 'car') {
+                            var factory = new CarFactory();
+                            return factory.createVehicle();
+                        } else if (type === 'bike') {
+                            var factory = new BikeFactory();
+                            return factory.createVehicle();
+                        }
+                        throw new Error('Unknown vehicle type');
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

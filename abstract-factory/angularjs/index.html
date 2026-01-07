@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="abstractFactoryApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Abstract Factory Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .ui-element {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .windows {
+            background-color: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .mac {
+            background-color: #f5f5f5;
+            border-color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body ng-controller="AbstractFactoryController">
+    <h1>Abstract Factory Pattern</h1>
+    <p>Creates families of related UI elements for different operating systems.</p>
+    
+    <div>
+        <button ng-click="createWindowsUI()">Create Windows UI</button>
+        <button ng-click="createMacUI()">Create Mac UI</button>
+    </div>
+
+    <div ng-repeat="element in uiElements" class="ui-element" ng-class="element.os">
+        <h3>{{element.type}} ({{element.os}})</h3>
+        <p>{{element.description}}</p>
+    </div>
+
+    <script>
+        angular.module('abstractFactoryApp', [])
+            .controller('AbstractFactoryController', ['$scope', 'GUIFactoryService', function($scope, GUIFactoryService) {
+                $scope.uiElements = [];
+
+                $scope.createWindowsUI = function() {
+                    var factory = GUIFactoryService.getFactory('windows');
+                    $scope.uiElements.push(factory.createButton());
+                    $scope.uiElements.push(factory.createCheckbox());
+                };
+
+                $scope.createMacUI = function() {
+                    var factory = GUIFactoryService.getFactory('mac');
+                    $scope.uiElements.push(factory.createButton());
+                    $scope.uiElements.push(factory.createCheckbox());
+                };
+            }])
+            .factory('GUIFactoryService', function() {
+                // Windows Factory
+                function WindowsFactory() {}
+                WindowsFactory.prototype.createButton = function() {
+                    return {
+                        type: 'Button',
+                        os: 'windows',
+                        description: 'Rendering Windows Button'
+                    };
+                };
+                WindowsFactory.prototype.createCheckbox = function() {
+                    return {
+                        type: 'Checkbox',
+                        os: 'windows',
+                        description: 'Rendering Windows Checkbox'
+                    };
+                };
+
+                // Mac Factory
+                function MacFactory() {}
+                MacFactory.prototype.createButton = function() {
+                    return {
+                        type: 'Button',
+                        os: 'mac',
+                        description: 'Rendering Mac Button'
+                    };
+                };
+                MacFactory.prototype.createCheckbox = function() {
+                    return {
+                        type: 'Checkbox',
+                        os: 'mac',
+                        description: 'Rendering Mac Checkbox'
+                    };
+                };
+
+                return {
+                    getFactory: function(os) {
+                        if (os === 'windows') {
+                            return new WindowsFactory();
+                        } else if (os === 'mac') {
+                            return new MacFactory();
+                        }
+                        throw new Error('Unknown OS type');
+                    }
+                };
+            });
+    </script>
+</body>
+</html>

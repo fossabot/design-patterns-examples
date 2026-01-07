@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="adapterApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Adapter Pattern - AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .player-result {
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .mp3 {
+            background-color: #e8f5e9;
+        }
+        .vlc {
+            background-color: #e3f2fd;
+        }
+        .mp4 {
+            background-color: #f3e5f5;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body ng-controller="AdapterController">
+    <h1>Adapter Pattern</h1>
+    <p>Media player adapter that allows playing different file formats.</p>
+    
+    <div>
+        <button ng-click="playMedia('mp3', 'song.mp3')">Play MP3</button>
+        <button ng-click="playMedia('vlc', 'movie.vlc')">Play VLC</button>
+        <button ng-click="playMedia('mp4', 'video.mp4')">Play MP4</button>
+    </div>
+
+    <div ng-if="playbackResults.length > 0">
+        <h3>Playback History</h3>
+        <div ng-repeat="result in playbackResults" class="player-result" ng-class="result.type">
+            <p><strong>Type:</strong> {{result.type | uppercase}}</p>
+            <p><strong>File:</strong> {{result.filename}}</p>
+            <p><strong>Status:</strong> {{result.message}}</p>
+        </div>
+    </div>
+
+    <script>
+        angular.module('adapterApp', [])
+            .controller('AdapterController', ['$scope', 'MediaPlayerService', function($scope, MediaPlayerService) {
+                $scope.playbackResults = [];
+
+                $scope.playMedia = function(type, filename) {
+                    var result = MediaPlayerService.play(type, filename);
+                    $scope.playbackResults.unshift({
+                        type: type,
+                        filename: filename,
+                        message: result
+                    });
+                };
+            }])
+            .factory('MediaPlayerService', function() {
+                // VLC Player (Adaptee)
+                function VLCPlayer() {}
+                VLCPlayer.prototype.playVLC = function(filename) {
+                    return 'Playing VLC file: ' + filename;
+                };
+
+                // MP4 Player (Adaptee)
+                function MP4Player() {}
+                MP4Player.prototype.playMP4 = function(filename) {
+                    return 'Playing MP4 file: ' + filename;
+                };
+
+                // Media Adapter
+                function MediaAdapter(audioType) {
+                    if (audioType === 'vlc') {
+                        this.advancedPlayer = new VLCPlayer();
+                        this.type = 'vlc';
+                    } else if (audioType === 'mp4') {
+                        this.advancedPlayer = new MP4Player();
+                        this.type = 'mp4';
+                    }
+                }
+
+                MediaAdapter.prototype.play = function(filename) {
+                    if (this.type === 'vlc') {
+                        return this.advancedPlayer.playVLC(filename);
+                    } else if (this.type === 'mp4') {
+                        return this.advancedPlayer.playMP4(filename);
+                    }
+                    return '';
+                };
+
+                // Audio Player (uses adapter)
+                function AudioPlayer() {}
+                AudioPlayer.prototype.play = function(audioType, filename) {
+                    if (audioType === 'mp3') {
+                        return 'Playing MP3 file: ' + filename;
+                    } else if (audioType === 'vlc' || audioType === 'mp4') {
+                        var adapter = new MediaAdapter(audioType);
+                        return adapter.play(filename);
+                    }
+                    return 'Invalid media type: ' + audioType;
+                };
+
+                var player = new AudioPlayer();
+
+                return {
+                    play: function(type, filename) {
+                        return player.play(type, filename);
+                    }
+                };
+            });
+    </script>
+</body>
+</html>
