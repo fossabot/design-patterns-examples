@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Proxy Pattern</h1>
+  <p>Provides a placeholder for another object to control access.</p>
+  
+  <div class="images-list">
+    <div *ngFor="let img of images; let i = index" class="image-item">
+      <button (click)="displayImage(i)" class="btn">Display {{ img.name }}</button>
+    </div>
+  </div>
+
+  <div *ngIf="displayResults.length > 0" class="results-section">
+    <h3>Display Results</h3>
+    <div *ngFor="let result of displayResults" class="result-item">
+      <p>{{ result }}</p>
+    </div>
+  </div>
+</div>

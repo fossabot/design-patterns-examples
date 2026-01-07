@@ -1,0 +1,73 @@
+.container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.btn {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.btn-mp3 {
+  background-color: #4CAF50;
+}
+
+.btn-mp3:hover {
+  background-color: #45a049;
+}
+
+.btn-vlc {
+  background-color: #ff9800;
+}
+
+.btn-vlc:hover {
+  background-color: #e68900;
+}
+
+.btn-mp4 {
+  background-color: #2196F3;
+}
+
+.btn-mp4:hover {
+  background-color: #0b7dda;
+}
+
+.results-section {
+  margin-top: 30px;
+}
+
+.result-item {
+  border: 2px solid #4CAF50;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #e8f5e9;
+}
+
+.result-item p {
+  margin: 0;
+}

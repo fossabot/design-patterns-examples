@@ -1,0 +1,11 @@
+<div class="container">
+  <h1>Composite Pattern</h1>
+  <p>Composes objects into tree structures to represent part-whole hierarchies.</p>
+  
+  <div class="organization-section">
+    <h3>Organization Hierarchy</h3>
+    <div *ngFor="let node of organization" class="employee-item" [style.margin-left.px]="node.level * 30">
+      <p>{{ getIndentation(node.level) }} {{ node.employee.describe() }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Command Pattern</h1>
+  <p>Encapsulates a request as an object.</p>
+  
+  <div class="controls">
+    <button (click)="turnOnLight()" class="btn btn-on">Turn On Light</button>
+    <button (click)="turnOffLight()" class="btn btn-off">Turn Off Light</button>
+    <button (click)="undoCommand()" class="btn btn-undo">Undo</button>
+  </div>
+
+  <div class="history-section">
+    <h3>Command History</h3>
+    <div *ngFor="let entry of commandHistory" class="history-item">
+      <p>{{ entry }}</p>
+    </div>
+  </div>
+</div>

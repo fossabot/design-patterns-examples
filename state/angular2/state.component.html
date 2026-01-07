@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>State Pattern</h1>
+  <p>Allows an object to alter its behavior when its internal state changes.</p>
+  
+  <div class="current-state">
+    <h3>Current State: {{ getCurrentState() }}</h3>
+  </div>
+
+  <div class="controls">
+    <button (click)="reviewDocument()" class="btn btn-review">Move to Review</button>
+    <button (click)="publishDocument()" class="btn btn-publish">Publish Document</button>
+  </div>
+
+  <div class="history-section">
+    <h3>State History</h3>
+    <div *ngFor="let entry of stateHistory" class="history-item">
+      <p>{{ entry }}</p>
+    </div>
+  </div>
+</div>

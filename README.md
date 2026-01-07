@@ -1,10 +1,10 @@
 # Design Patterns Examples
 
-A comprehensive collection of design pattern implementations in Go, React.js, PHP, TypeScript, Java, and AngularJS.
+A comprehensive collection of design pattern implementations in Go, React.js, PHP, TypeScript, Java, AngularJS, and Angular 2+.
 
 ## 📁 Repository Structure
 
-Each design pattern is organized in its own directory with implementations in six programming languages:
+Each design pattern is organized in its own directory with implementations in seven programming languages:
 
 ```
 design-pattern-name/
@@ -13,7 +13,8 @@ design-pattern-name/
 ├── php/
 ├── typescript/
 ├── java/
-└── angularjs/
+├── angularjs/
+└── angular2/
 ```
 
 ## 🎨 Design Patterns Included
@@ -95,6 +96,15 @@ python -m http.server 8000
 # Navigate to http://localhost:8000
 ```
 
+### Angular 2+
+```bash
+cd factory-method/angular2
+# Copy the files into your Angular project
+# Import the component in your app:
+# import { FactoryMethodComponent } from './factory-method/angular2/factory-method.component';
+# Add to your module or use as standalone component
+```
+
 ## 📖 Pattern Descriptions
 
 ### Factory Method
@@ -171,6 +181,7 @@ Separates algorithms from the objects they operate on. Example: Shape visitor th
 - **TypeScript** - version 4.0+
 - **Java** - version 8+
 - **AngularJS** - version 1.8+
+- **Angular 2+** - version 14+ (standalone components)
 
 ## 📝 License
 

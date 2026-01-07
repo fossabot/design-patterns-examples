@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>Adapter Pattern</h1>
+  <p>Allows incompatible interfaces to work together.</p>
+  
+  <div class="controls">
+    <input type="text" [(ngModel)]="fileName" placeholder="Enter file name" class="input-field">
+    <div class="button-group">
+      <button (click)="playMedia('mp3')" class="btn btn-mp3">Play MP3</button>
+      <button (click)="playMedia('vlc')" class="btn btn-vlc">Play VLC</button>
+      <button (click)="playMedia('mp4')" class="btn btn-mp4">Play MP4</button>
+    </div>
+  </div>
+
+  <div *ngIf="playResults.length > 0" class="results-section">
+    <h3>Playback Results</h3>
+    <div *ngFor="let result of playResults" class="result-item">
+      <p>{{ result }}</p>
+    </div>
+  </div>
+</div>

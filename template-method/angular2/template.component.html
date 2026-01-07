@@ -1,0 +1,19 @@
+<div class="container">
+  <h1>Template Method Pattern</h1>
+  <p>Defines the skeleton of an algorithm in a base class.</p>
+  
+  <div class="controls">
+    <button (click)="prepareTea()" class="btn">Prepare Tea</button>
+    <button (click)="prepareCoffee()" class="btn">Prepare Coffee</button>
+  </div>
+
+  <div *ngIf="preparations.length > 0" class="preparations-section">
+    <h3>Beverage Preparations</h3>
+    <div *ngFor="let prep of preparations" class="prep-item">
+      <h4>{{ prep.type }}</h4>
+      <ol>
+        <li *ngFor="let step of prep.steps">{{ step }}</li>
+      </ol>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Memento Pattern</h1>
+  <p>Captures and restores an object's internal state.</p>
+  
+  <div class="editor-section">
+    <h3>Current Content</h3>
+    <div class="content-display">{{ getContent() || 'Empty' }}</div>
+  </div>
+
+  <div class="controls">
+    <input type="text" [(ngModel)]="inputText" placeholder="Type text" class="input-field">
+    <button (click)="write()" class="btn">Write</button>
+    <button (click)="save()" class="btn btn-save">Save State</button>
+    <button (click)="undo()" class="btn btn-undo">Undo</button>
+  </div>
+</div>

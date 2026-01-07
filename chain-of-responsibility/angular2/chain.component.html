@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Chain of Responsibility Pattern</h1>
+  <p>Passes requests along a chain of handlers.</p>
+  
+  <div class="controls">
+    <button (click)="submitIssue(1, 'Password reset')" class="btn">Level 1 Issue</button>
+    <button (click)="submitIssue(2, 'Software bug')" class="btn">Level 2 Issue</button>
+    <button (click)="submitIssue(3, 'System crash')" class="btn">Level 3 Issue</button>
+  </div>
+
+  <div *ngIf="results.length > 0" class="results-section">
+    <h3>Support Tickets</h3>
+    <div *ngFor="let result of results" class="result-item">
+      <p>{{ result }}</p>
+    </div>
+  </div>
+</div>

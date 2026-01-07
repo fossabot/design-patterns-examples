@@ -1,0 +1,18 @@
+<div class="container">
+  <h1>Mediator Pattern</h1>
+  <p>Defines an object that encapsulates how objects interact.</p>
+  
+  <div class="controls">
+    <input type="text" [(ngModel)]="messageText" placeholder="Type message" class="input-field">
+    <button (click)="sendMessage(0)" class="btn">Send as Alice</button>
+    <button (click)="sendMessage(1)" class="btn">Send as Bob</button>
+    <button (click)="sendMessage(2)" class="btn">Send as Charlie</button>
+  </div>
+
+  <div *ngIf="messages.length > 0" class="messages-section">
+    <h3>Chat Messages</h3>
+    <div *ngFor="let msg of messages" class="message-item">
+      <p>{{ msg }}</p>
+    </div>
+  </div>
+</div>

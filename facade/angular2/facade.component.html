@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Facade Pattern</h1>
+  <p>Provides a simplified interface to a complex subsystem.</p>
+  
+  <div class="controls">
+    <button (click)="startComputer()" [disabled]="isStarted" class="btn btn-start">Start Computer</button>
+    <button (click)="reset()" class="btn btn-reset">Reset</button>
+  </div>
+
+  <div *ngIf="startupSteps.length > 0" class="steps-section">
+    <h3>Startup Process</h3>
+    <div *ngFor="let step of startupSteps" class="step-item">
+      <p>{{ step }}</p>
+    </div>
+  </div>
+</div>

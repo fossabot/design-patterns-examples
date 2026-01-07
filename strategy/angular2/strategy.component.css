@@ -1,0 +1,69 @@
+.container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.amount-section {
+  margin: 20px 0;
+}
+
+.input-field {
+  padding: 8px;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.btn {
+  color: white;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-credit {
+  background-color: #2196F3;
+}
+
+.btn-credit:hover {
+  background-color: #0b7dda;
+}
+
+.btn-paypal {
+  background-color: #0070ba;
+}
+
+.btn-paypal:hover {
+  background-color: #005a94;
+}
+
+.btn-bitcoin {
+  background-color: #ff9800;
+}
+
+.btn-bitcoin:hover {
+  background-color: #e68900;
+}
+
+.results-section {
+  margin-top: 30px;
+}
+
+.result-item {
+  border: 2px solid #4CAF50;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #e8f5e9;
+}
+
+.result-item p {
+  margin: 0;
+}

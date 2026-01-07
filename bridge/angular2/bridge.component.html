@@ -1,0 +1,26 @@
+<div class="container">
+  <h1>Bridge Pattern</h1>
+  <p>Separates abstraction from implementation so they can vary independently.</p>
+  
+  <div class="controls">
+    <h3>Create Shapes with Colors</h3>
+    <div class="button-grid">
+      <button (click)="createShape('circle', 'red')" class="btn">Red Circle</button>
+      <button (click)="createShape('circle', 'blue')" class="btn">Blue Circle</button>
+      <button (click)="createShape('circle', 'green')" class="btn">Green Circle</button>
+      <button (click)="createShape('square', 'red')" class="btn">Red Square</button>
+      <button (click)="createShape('square', 'blue')" class="btn">Blue Square</button>
+      <button (click)="createShape('square', 'green')" class="btn">Green Square</button>
+      <button (click)="createShape('triangle', 'red')" class="btn">Red Triangle</button>
+      <button (click)="createShape('triangle', 'blue')" class="btn">Blue Triangle</button>
+      <button (click)="createShape('triangle', 'green')" class="btn">Green Triangle</button>
+    </div>
+  </div>
+
+  <div *ngIf="shapes.length > 0" class="shapes-section">
+    <h3>Created Shapes</h3>
+    <div *ngFor="let item of shapes" class="shape-item">
+      <p>{{ item.description }}</p>
+    </div>
+  </div>
+</div>

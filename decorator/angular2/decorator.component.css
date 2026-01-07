@@ -1,0 +1,86 @@
+.container {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.current-coffee {
+  background-color: #fff3e0;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.btn {
+  color: white;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-milk {
+  background-color: #8d6e63;
+}
+
+.btn-milk:hover {
+  background-color: #6d4c41;
+}
+
+.btn-sugar {
+  background-color: #f06292;
+}
+
+.btn-sugar:hover {
+  background-color: #e91e63;
+}
+
+.btn-cream {
+  background-color: #64b5f6;
+}
+
+.btn-cream:hover {
+  background-color: #2196F3;
+}
+
+.btn-order {
+  background-color: #4CAF50;
+}
+
+.btn-order:hover {
+  background-color: #45a049;
+}
+
+.btn-reset {
+  background-color: #ff9800;
+}
+
+.btn-reset:hover {
+  background-color: #e68900;
+}
+
+.action-buttons {
+  margin: 20px 0;
+}
+
+.orders-section {
+  margin-top: 30px;
+}
+
+.order-item {
+  border: 2px solid #4CAF50;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #e8f5e9;
+}
+
+.order-item p {
+  margin: 0;
+}

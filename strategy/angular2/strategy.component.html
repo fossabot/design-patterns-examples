@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>Strategy Pattern</h1>
+  <p>Defines a family of algorithms and makes them interchangeable.</p>
+  
+  <div class="amount-section">
+    <label>Amount: $</label>
+    <input type="number" [(ngModel)]="amount" class="input-field">
+  </div>
+
+  <div class="controls">
+    <h3>Select Payment Method</h3>
+    <button (click)="payWithCreditCard()" class="btn btn-credit">Pay with Credit Card</button>
+    <button (click)="payWithPayPal()" class="btn btn-paypal">Pay with PayPal</button>
+    <button (click)="payWithBitcoin()" class="btn btn-bitcoin">Pay with Bitcoin</button>
+  </div>
+
+  <div *ngIf="paymentResults.length > 0" class="results-section">
+    <h3>Payment History</h3>
+    <div *ngFor="let result of paymentResults" class="result-item">
+      <p>{{ result }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="container">
+  <h1>Decorator Pattern</h1>
+  <p>Adds responsibilities to objects dynamically.</p>
+  
+  <div class="current-coffee">
+    <h3>Current Coffee</h3>
+    <p><strong>{{ currentCoffee.getDescription() }}</strong></p>
+    <p>Cost: ${{ currentCoffee.getCost().toFixed(2) }}</p>
+  </div>
+
+  <div class="controls">
+    <h3>Add Decorations</h3>
+    <button (click)="addMilk()" class="btn btn-milk">Add Milk (+$0.50)</button>
+    <button (click)="addSugar()" class="btn btn-sugar">Add Sugar (+$0.20)</button>
+    <button (click)="addWhippedCream()" class="btn btn-cream">Add Whipped Cream (+$0.70)</button>
+  </div>
+
+  <div class="action-buttons">
+    <button (click)="orderCoffee()" class="btn btn-order">Order Coffee</button>
+    <button (click)="resetCoffee()" class="btn btn-reset">Reset</button>
+  </div>
+
+  <div *ngIf="coffeeOrders.length > 0" class="orders-section">
+    <h3>Coffee Orders</h3>
+    <div *ngFor="let order of coffeeOrders" class="order-item">
+      <p>{{ order.description }} - ${{ order.cost.toFixed(2) }}</p>
+    </div>
+  </div>
+</div>

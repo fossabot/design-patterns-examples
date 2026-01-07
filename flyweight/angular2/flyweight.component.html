@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>Flyweight Pattern</h1>
+  <p>Shares common state between multiple objects to save memory.</p>
+  
+  <div class="controls">
+    <button (click)="addText('Hello', 'Arial', 12, 'black')" class="btn">Add "Hello"</button>
+    <button (click)="addText('World', 'Arial', 12, 'black')" class="btn">Add "World"</button>
+    <button (click)="addText('Test', 'Times', 14, 'red')" class="btn">Add "Test"</button>
+  </div>
+
+  <div class="stats">
+    <p>Total Characters: {{ characters.length }}</p>
+    <p>Unique Styles (Flyweights): {{ getStyleCount() }}</p>
+  </div>
+
+  <div *ngIf="characters.length > 0" class="characters-section">
+    <h3>Characters</h3>
+    <div class="characters-display">
+      <span *ngFor="let char of characters">{{ char.char }}</span>
+    </div>
+  </div>
+</div>

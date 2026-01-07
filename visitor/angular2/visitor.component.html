@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Visitor Pattern</h1>
+  <p>Separates algorithms from the objects they operate on.</p>
+  
+  <div class="controls">
+    <button (click)="calculateAreas()" class="btn">Calculate Areas</button>
+    <button (click)="drawShapes()" class="btn">Draw Shapes</button>
+  </div>
+
+  <div *ngIf="results.length > 0" class="results-section">
+    <h3>Results</h3>
+    <div *ngFor="let result of results" class="result-item">
+      <p>{{ result }}</p>
+    </div>
+  </div>
+</div>
