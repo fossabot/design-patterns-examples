@@ -15,7 +15,7 @@ Escolha seu idioma preferido para visualizar a documentação:
 ### 📚 Available Languages / Idiomas Disponíveis
 
 - **[English](en/README.md)** - Full documentation in English
-- **[Português](pt/README.md)** - Documentação completa em Português
+- **[Português](pt-br/README.md)** - Documentação completa em Português
 
 ---
 
