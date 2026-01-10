@@ -1,0 +1,39 @@
+# Jekyll configuration for GitHub Pages
+title: Design Patterns Examples
+description: A comprehensive collection of design pattern implementations in Go, React.js, PHP, TypeScript, Java, AngularJS, and Angular 2+
+url: "" # Will be set by GitHub Pages
+baseurl: "" # Will be set by GitHub Pages
+
+# Build settings
+markdown: kramdown
+theme: null
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .github/
+
+# Include files
+include:
+  - _config.yml
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+
+# Collections
+collections: []
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
