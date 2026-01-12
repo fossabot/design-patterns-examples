@@ -5,6 +5,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/PULL_REQUEST_TEMPLATE.md)
 [![Issues](https://img.shields.io/github/issues/luizwbr/design-patterns-examples)](.github/ISSUE_TEMPLATE.md)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11714/badge)](https://www.bestpractices.dev/projects/11714)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fluizwbr%2Fdesign-patterns-examples.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fluizwbr%2Fdesign-patterns-examples?ref=badge_shield)
 
 [en]
 A comprehensive collection of design pattern implementations in Go, React.js, PHP, TypeScript, Java, AngularJS, and Angular 2+.
@@ -150,6 +151,9 @@ This project is open source and available for educational purposes.
 
 [pt-br]
 Este projeto é de código aberto e está disponível para fins educacionais.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fluizwbr%2Fdesign-patterns-examples.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fluizwbr%2Fdesign-patterns-examples?ref=badge_large)
 
 ## 🤝 Contributing / Contribuindo
 
