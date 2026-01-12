@@ -2,35 +2,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Observer interface
-interface Observer {
+interface TemperatureObserver {
     void update(double temperature);
 }
 
 // Subject interface
 interface Subject {
-    void attach(Observer observer);
-    void detach(Observer observer);
+    void attach(TemperatureObserver observer);
+    void detach(TemperatureObserver observer);
     void notifyObservers();
 }
 
 // Concrete Subject
 class WeatherStation implements Subject {
-    private List<Observer> observers = new ArrayList<>();
+    private List<TemperatureObserver> observers = new ArrayList<>();
     private double temperature = 0.0;
 
     @Override
-    public void attach(Observer observer) {
+    public void attach(TemperatureObserver observer) {
         observers.add(observer);
     }
 
     @Override
-    public void detach(Observer observer) {
+    public void detach(TemperatureObserver observer) {
         observers.remove(observer);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer observer : observers) {
+        for (TemperatureObserver observer : observers) {
             observer.update(temperature);
         }
     }
@@ -42,7 +42,7 @@ class WeatherStation implements Subject {
 }
 
 // Concrete Observers
-class PhoneDisplay implements Observer {
+class PhoneDisplay implements TemperatureObserver {
     private String name;
 
     public PhoneDisplay(String name) {
@@ -55,7 +55,7 @@ class PhoneDisplay implements Observer {
     }
 }
 
-class WindowDisplay implements Observer {
+class WindowDisplay implements TemperatureObserver {
     private String name;
 
     public WindowDisplay(String name) {
@@ -72,8 +72,8 @@ class WindowDisplay implements Observer {
 public class Observer {
     public static void main(String[] args) {
         WeatherStation station = new WeatherStation();
-        observer.Observer phone = new PhoneDisplay("Phone Display");
-        observer.Observer window = new WindowDisplay("Window Display");
+        TemperatureObserver phone = new PhoneDisplay("Phone Display");
+        TemperatureObserver window = new WindowDisplay("Window Display");
 
         station.attach(phone);
         station.attach(window);

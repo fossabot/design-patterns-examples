@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Memento
-class Memento {
+class EditorMemento {
     private String content;
 
-    public Memento(String content) {
+    public EditorMemento(String content) {
         this.content = content;
     }
 
@@ -26,24 +26,24 @@ class TextEditor {
         return content;
     }
 
-    public Memento save() {
-        return new Memento(content);
+    public EditorMemento save() {
+        return new EditorMemento(content);
     }
 
-    public void restore(Memento memento) {
+    public void restore(EditorMemento memento) {
         content = memento.getContent();
     }
 }
 
 // Caretaker
 class History {
-    private List<Memento> mementos = new ArrayList<>();
+    private List<EditorMemento> mementos = new ArrayList<>();
 
-    public void push(Memento memento) {
+    public void push(EditorMemento memento) {
         mementos.add(memento);
     }
 
-    public Memento pop() {
+    public EditorMemento pop() {
         if (mementos.isEmpty()) {
             return null;
         }

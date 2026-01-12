@@ -62,4 +62,5 @@ func main() {
 	
 	alice.Send("Hello everyone!")
 	bob.Send("Hi Alice!")
+	charlie.Send("Hey folks!")
 }

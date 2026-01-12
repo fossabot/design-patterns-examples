@@ -6,7 +6,7 @@ This directory contains the GitHub Pages website for the Design Patterns Example
 
 The website is automatically deployed to GitHub Pages whenever changes are pushed to the main/master branch.
 
-Visit: `https://yourusername.github.io/design-patterns-examples/`
+Visit: `https://luizwbr.github.io/design-patterns-examples/`
 
 ## 📁 Structure
 
@@ -50,7 +50,7 @@ To run the website locally:
 
 ### Updating GitHub Links
 
-Replace `yourusername` in the following files:
+Replace `luizwbr` in the following files:
 - `index.html`: All GitHub repository links
 - Update the repository URL throughout the page
 

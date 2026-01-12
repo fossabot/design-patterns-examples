@@ -1,0 +1,245 @@
+name: Run Pattern Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  test-go:
+    name: Test Go Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pattern:
+          - abstract-factory
+          - adapter
+          - bridge
+          - builder
+          - chain-of-responsibility
+          - command
+          - composite
+          - decorator
+          - facade
+          - factory-method
+          - flyweight
+          - iterator
+          - mediator
+          - memento
+          - observer
+          - prototype
+          - proxy
+          - singleton
+          - state
+          - strategy
+          - template-method
+          - visitor
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Test ${{ matrix.pattern }} (Go)
+        working-directory: patterns/${{ matrix.pattern }}/go
+        run: |
+          if [ -f "main.go" ]; then
+            echo "Testing ${{ matrix.pattern }} pattern..."
+            go run main.go
+            echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+          else
+            echo "⚠ No main.go found for ${{ matrix.pattern }}"
+          fi
+
+  test-typescript:
+    name: Test TypeScript Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pattern:
+          - abstract-factory
+          - adapter
+          - bridge
+          - builder
+          - chain-of-responsibility
+          - command
+          - composite
+          - decorator
+          - facade
+          - factory-method
+          - flyweight
+          - iterator
+          - mediator
+          - memento
+          - observer
+          - prototype
+          - proxy
+          - singleton
+          - state
+          - strategy
+          - template-method
+          - visitor
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install TypeScript and tsx
+        run: npm install -g typescript tsx
+
+      - name: Test ${{ matrix.pattern }} (TypeScript)
+        working-directory: patterns/${{ matrix.pattern }}/typescript
+        run: |
+          if ls *.ts 1> /dev/null 2>&1; then
+            echo "Testing ${{ matrix.pattern }} pattern..."
+            for file in *.ts; do
+              echo "Running $file..."
+              tsx "$file"
+            done
+            echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+          else
+            echo "⚠ No TypeScript files found for ${{ matrix.pattern }}"
+          fi
+
+  test-java:
+    name: Test Java Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pattern:
+          - abstract-factory
+          - adapter
+          - bridge
+          - builder
+          - chain-of-responsibility
+          - command
+          - composite
+          - decorator
+          - facade
+          - factory-method
+          - flyweight
+          - iterator
+          - mediator
+          - memento
+          - observer
+          - prototype
+          - proxy
+          - singleton
+          - state
+          - strategy
+          - template-method
+          - visitor
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Test ${{ matrix.pattern }} (Java)
+        working-directory: patterns/${{ matrix.pattern }}/java
+        continue-on-error: false
+        run: |
+          if ls *.java 1> /dev/null 2>&1; then
+            echo "Testing ${{ matrix.pattern }} pattern..."
+            # Find the main class (typically the one with main method)
+            for file in *.java; do
+              if grep -q "public static void main" "$file"; then
+                classname=$(basename "$file" .java)
+                echo "Compiling and running $classname..."
+                if javac *.java 2>&1; then
+                  if java "$classname" 2>&1; then
+                    echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+                  else
+                    echo "✗ ${{ matrix.pattern }} pattern failed at runtime"
+                    exit 1
+                  fi
+                else
+                  echo "✗ ${{ matrix.pattern }} pattern failed to compile"
+                  exit 1
+                fi
+                break
+              fi
+            done
+          else
+            echo "⚠ No Java files found for ${{ matrix.pattern }}"
+          fi
+
+  test-php:
+    name: Test PHP Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pattern:
+          - abstract-factory
+          - adapter
+          - bridge
+          - builder
+          - chain-of-responsibility
+          - command
+          - composite
+          - decorator
+          - facade
+          - factory-method
+          - flyweight
+          - iterator
+          - mediator
+          - memento
+          - observer
+          - prototype
+          - proxy
+          - singleton
+          - state
+          - strategy
+          - template-method
+          - visitor
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Test ${{ matrix.pattern }} (PHP)
+        working-directory: patterns/${{ matrix.pattern }}/php
+        run: |
+          if ls *.php 1> /dev/null 2>&1; then
+            echo "Testing ${{ matrix.pattern }} pattern..."
+            for file in *.php; do
+              echo "Running $file..."
+              php "$file"
+            done
+            echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+          else
+            echo "⚠ No PHP files found for ${{ matrix.pattern }}"
+          fi
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [test-go, test-typescript, test-java, test-php]
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          echo "All pattern tests completed!"
+          echo "Check individual job results for details."

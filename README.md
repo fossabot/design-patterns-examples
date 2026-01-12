@@ -1,6 +1,7 @@
 # Design Patterns Examples / Exemplos de Padrões de Projeto
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests](https://github.com/luizwbr/design-patterns-examples/workflows/Run%20Pattern%20Tests/badge.svg)](https://github.com/luizwbr/design-patterns-examples/actions)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/PULL_REQUEST_TEMPLATE.md)
 [![Issues](https://img.shields.io/github/issues/luizwbr/design-patterns-examples)](.github/ISSUE_TEMPLATE.md)
 
@@ -120,6 +121,24 @@ Este repositório inclui 23 padrões de projeto em três categorias:
 For detailed information about each pattern, please select your language above.
 
 Para informações detalhadas sobre cada padrão, selecione seu idioma acima.
+
+---
+
+## 🧪 Testing / Testes
+
+[en]
+All pattern implementations include automated testing via GitHub Actions. Tests run on every push and pull request to ensure code quality.
+
+**CI/CD Pipeline**: Automated tests for Go, TypeScript, Java, and PHP implementations
+- View the [CI Testing Documentation](docs/CI_TESTING.md) for details
+- Run tests locally: `./scripts/test-all-patterns.sh`
+
+[pt-br]
+Todas as implementações de padrões incluem testes automatizados via GitHub Actions. Os testes são executados a cada push e pull request para garantir a qualidade do código.
+
+**Pipeline CI/CD**: Testes automatizados para implementações Go, TypeScript, Java e PHP
+- Veja a [Documentação de Testes CI](docs/CI_TESTING.md) para detalhes
+- Execute testes localmente: `./scripts/test-all-patterns.sh`
 
 ---
 

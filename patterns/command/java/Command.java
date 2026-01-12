@@ -16,12 +16,12 @@ class Light {
 }
 
 // Command interface
-interface Command {
+interface LightCommand {
     String execute();
 }
 
 // Concrete Commands
-class LightOnCommand implements Command {
+class LightOnCommand implements LightCommand {
     private Light light;
 
     public LightOnCommand(Light light) {
@@ -34,7 +34,7 @@ class LightOnCommand implements Command {
     }
 }
 
-class LightOffCommand implements Command {
+class LightOffCommand implements LightCommand {
     private Light light;
 
     public LightOffCommand(Light light) {
@@ -49,9 +49,9 @@ class LightOffCommand implements Command {
 
 // Invoker
 class RemoteControl {
-    private Command command;
+    private LightCommand command;
 
-    public void setCommand(Command command) {
+    public void setCommand(LightCommand command) {
         this.command = command;
     }
 
@@ -64,8 +64,8 @@ class RemoteControl {
 public class Command {
     public static void main(String[] args) {
         Light light = new Light("Living Room");
-        Command lightOn = new LightOnCommand(light);
-        Command lightOff = new LightOffCommand(light);
+        LightCommand lightOn = new LightOnCommand(light);
+        LightCommand lightOff = new LightOffCommand(light);
         RemoteControl remote = new RemoteControl();
 
         remote.setCommand(lightOn);
