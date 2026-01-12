@@ -12,13 +12,13 @@ class Book {
 }
 
 // Iterator interface
-interface Iterator {
+interface BookIteratorInterface {
     public function hasNext(): bool;
     public function next(): ?Book;
 }
 
 // Concrete Iterator
-class BookIterator implements Iterator {
+class BookIterator implements BookIteratorInterface {
     private $books;
     private $index = 0;
 
@@ -46,7 +46,7 @@ class BookCollection {
         $this->books[] = $book;
     }
 
-    public function createIterator(): Iterator {
+    public function createIterator(): BookIteratorInterface {
         return new BookIterator($this->books);
     }
 }

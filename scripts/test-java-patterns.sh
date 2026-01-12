@@ -34,7 +34,7 @@ for pattern_dir in "$PATTERNS_DIR"/*/; do
             done
             
             if [ -n "$main_class" ]; then
-                if (cd "$java_dir" && javac *.java && java "$main_class" > /dev/null 2>&1); then
+                if (cd "$java_dir" && javac *.java 2>&1 && java "$main_class" > /dev/null 2>&1); then
                     echo "✓ PASSED: $pattern_name"
                     PASSED_TESTS+=("$pattern_name")
                     # Clean up .class files

@@ -18,13 +18,13 @@ class Book {
 }
 
 // Iterator interface
-interface Iterator {
+interface BookIteratorInterface {
     boolean hasNext();
     Book next();
 }
 
 // Concrete Iterator
-class BookIterator implements Iterator {
+class BookIterator implements BookIteratorInterface {
     private Book[] books;
     private int index = 0;
 
@@ -61,7 +61,7 @@ class BookCollection {
         }
     }
 
-    public Iterator createIterator() {
+    public BookIteratorInterface createIterator() {
         return new BookIterator(books);
     }
 }
@@ -74,7 +74,7 @@ public class Iterator {
         collection.addBook(new Book("Clean Code", "Robert Martin"));
         collection.addBook(new Book("The Pragmatic Programmer", "Hunt & Thomas"));
 
-        iterator.Iterator iterator = collection.createIterator();
+        BookIteratorInterface iterator = collection.createIterator();
         System.out.println("Books in collection:");
         while (iterator.hasNext()) {
             Book book = iterator.next();

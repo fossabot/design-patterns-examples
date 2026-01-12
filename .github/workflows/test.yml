@@ -142,6 +142,7 @@ jobs:
           - strategy
           - template-method
           - visitor
+      fail-fast: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -154,6 +155,7 @@ jobs:
 
       - name: Test ${{ matrix.pattern }} (Java)
         working-directory: patterns/${{ matrix.pattern }}/java
+        continue-on-error: false
         run: |
           if ls *.java 1> /dev/null 2>&1; then
             echo "Testing ${{ matrix.pattern }} pattern..."
@@ -162,9 +164,17 @@ jobs:
               if grep -q "public static void main" "$file"; then
                 classname=$(basename "$file" .java)
                 echo "Compiling and running $classname..."
-                javac *.java
-                java "$classname"
-                echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+                if javac *.java 2>&1; then
+                  if java "$classname" 2>&1; then
+                    echo "✓ ${{ matrix.pattern }} pattern executed successfully"
+                  else
+                    echo "✗ ${{ matrix.pattern }} pattern failed at runtime"
+                    exit 1
+                  fi
+                else
+                  echo "✗ ${{ matrix.pattern }} pattern failed to compile"
+                  exit 1
+                fi
                 break
               fi
             done
