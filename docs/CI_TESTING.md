@@ -23,7 +23,7 @@ The workflow includes separate jobs for each language:
 - **Validation**: Ensures code compiles and runs without errors
 
 #### 2. **TypeScript Tests** (`test-typescript`)
-- **Setup**: Node.js 20, TypeScript, ts-node
+- **Setup**: Node.js 20, TypeScript, tsx
 - **Process**: Executes all `.ts` files in each pattern directory
 - **Validation**: Ensures TypeScript code compiles and executes correctly
 
@@ -109,7 +109,7 @@ go version
 #### TypeScript
 ```bash
 # Install Node.js and TypeScript
-npm install -g typescript ts-node
+npm install -g typescript tsx
 ```
 
 #### Java

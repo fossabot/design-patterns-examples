@@ -33,11 +33,11 @@ Tests all Go pattern implementations.
 #### `test-typescript-patterns.sh`
 Tests all TypeScript pattern implementations.
 
-**Prerequisites:** Node.js 18+, TypeScript, ts-node
+**Prerequisites:** Node.js 18+, TypeScript, tsx
 
 ```bash
 # Install dependencies if needed
-npm install -g typescript ts-node
+npm install -g typescript tsx
 
 # Run tests
 ./scripts/test-typescript-patterns.sh

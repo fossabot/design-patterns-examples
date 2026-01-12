@@ -97,8 +97,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install TypeScript
-        run: npm install -g typescript ts-node
+      - name: Install TypeScript and tsx
+        run: npm install -g typescript tsx
 
       - name: Test ${{ matrix.pattern }} (TypeScript)
         working-directory: patterns/${{ matrix.pattern }}/typescript
@@ -107,7 +107,7 @@ jobs:
             echo "Testing ${{ matrix.pattern }} pattern..."
             for file in *.ts; do
               echo "Running $file..."
-              ts-node "$file"
+              tsx "$file"
             done
             echo "✓ ${{ matrix.pattern }} pattern executed successfully"
           else

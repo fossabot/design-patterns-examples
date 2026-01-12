@@ -14,7 +14,7 @@ go run main.go
 
 # TypeScript
 cd patterns/your-pattern/typescript
-ts-node YourPattern.ts
+tsx YourPattern.ts
 
 # Java
 cd patterns/your-pattern/java

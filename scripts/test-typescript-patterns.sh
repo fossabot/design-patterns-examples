@@ -13,10 +13,10 @@ echo "Testing TypeScript Pattern Implementations"
 echo "================================"
 echo ""
 
-# Check if ts-node is installed
-if ! command -v ts-node &> /dev/null; then
-    echo "Installing ts-node..."
-    npm install -g typescript ts-node
+# Check if tsx is installed
+if ! command -v tsx &> /dev/null; then
+    echo "Installing tsx..."
+    npm install -g typescript tsx
 fi
 
 for pattern_dir in "$PATTERNS_DIR"/*/; do
@@ -35,7 +35,7 @@ for pattern_dir in "$PATTERNS_DIR"/*/; do
                 filename=$(basename "$ts_file")
                 echo "  Running: $filename"
                 
-                if ! (cd "$ts_dir" && ts-node "$filename" > /dev/null 2>&1); then
+                if ! (cd "$ts_dir" && tsx "$filename" > /dev/null 2>&1); then
                     test_failed=true
                     break
                 fi
